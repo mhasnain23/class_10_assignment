@@ -103,9 +103,11 @@ const BooksCard = () => {
   console.log(booksData);
 
   return (
-    <div className="w-full pt-4 translate-y-20">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6">
-        {error && <p className="text-red-500 font-medium">{error}</p>}
+    <div className="w-full space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {error && (
+          <p className="text-red-500 font-medium col-span-full">{error}</p>
+        )}
         {booksData.length > 0 ? (
           booksData.map((book) => (
             <Card
@@ -161,8 +163,8 @@ const BooksCard = () => {
             </Card>
           ))
         ) : (
-          <p className="text-2xl font-bold text-black/90">
-            {isLoading ? "Loading please wait..." : "No Book Available"}
+          <p className="text-lg font-medium text-gray-700 col-span-full text-center">
+            {isLoading ? "Loading please wait..." : "No Books Available"}
           </p>
         )}
       </div>
