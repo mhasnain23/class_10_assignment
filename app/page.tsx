@@ -26,7 +26,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="max-w-7xl mx-auto mt-20">
+      <div className="max-w-7xl mx-auto py-20">
         <h1 className="text-4xl my-6 font-extrabold tracking-tight">
           Exlore our books
         </h1>
