@@ -49,7 +49,7 @@ const EditBooks = ({ book, onUpdate }: EditBooksProps) => {
   useEffect(() => {
     setEditData(formData);
     setImagePreview(book.image);
-  }, [formData]);
+  }, [formData.image]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, files } = e.target;
