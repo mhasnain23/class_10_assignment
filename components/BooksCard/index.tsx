@@ -77,22 +77,24 @@ const BooksCard = () => {
 
   const handleDelete = async (bookId: string) => {
     try {
-      setIsLoading(true);
       setIsDeleting(bookId);
-      const response = await fetch(`/api/delete-books/${bookId}`, {
+      const response = await fetch(`/api/delete-books?bookId=${bookId}`, {
         method: "DELETE",
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to delete book");
+        throw new Error(data.message || "Failed to delete book");
       }
 
-      setIsLoading(false);
       // Refresh the books list after successful deletion
       fetchBooksData();
     } catch (error) {
-      setIsLoading(false);
       console.error("Error deleting book:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to delete book"
+      );
     } finally {
       setIsDeleting(null);
     }
@@ -103,6 +105,7 @@ const BooksCard = () => {
   return (
     <div className="w-full pt-4 translate-y-20">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6">
+        {error && <p className="text-red-500 font-medium">{error}</p>}
         {booksData.length > 0 ? (
           booksData.map((book) => (
             <Card
@@ -146,34 +149,13 @@ const BooksCard = () => {
                 </CardDescription>
                 <CardFooter className="flex justify-between pt-2">
                   <EditBooks book={book} onUpdate={fetchBooksData} />
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        disabled={isLoading}
-                        className="bg-red-600 hover:bg-red-700 hover:text-white/60 text-white/90 rounded-lg flex px-5 py-1.5 transition-all ease-in duration-[0.2s] disabled:bg-red-400"
-                      >
-                        Delete
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogTitle>
-                        <span className="text-xl font-bold">
-                          Are you absolutly sure!
-                        </span>
-                      </DialogTitle>
-                      {/* dialog footer for deleteing  */}
-                      <DialogFooter>
-                        <Button
-                          className="px-5 py-1.5"
-                          variant="destructive"
-                          disabled={isLoading}
-                          onClick={() => handleDelete(book._id)}
-                        >
-                          {isDeleting === book._id ? "Deleting..." : "Delete"}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                  <Button
+                    onClick={() => handleDelete(book._id)}
+                    disabled={isDeleting === book._id}
+                    className="bg-red-600 hover:bg-red-700 hover:text-white/60 text-white/90 rounded-lg flex px-5 py-1.5 transition-all ease-in duration-[0.2s] disabled:bg-red-400"
+                  >
+                    {isDeleting === book._id ? "Deleting..." : "Delete"}
+                  </Button>
                 </CardFooter>
               </CardContent>
             </Card>

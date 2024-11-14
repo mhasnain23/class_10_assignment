@@ -79,7 +79,7 @@ const EditBooks = ({ book, onUpdate }: EditBooksProps) => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/put-books/${book._id}`, {
+      const response = await fetch(`/api/put-books?bookId=${book._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -87,18 +87,20 @@ const EditBooks = ({ book, onUpdate }: EditBooksProps) => {
         body: JSON.stringify(editData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to update book");
+        throw new Error(data.message || "Failed to update book");
       }
 
+      setOpen(false);
+      onUpdate();
       window.dispatchEvent(new Event("bookUpdated"));
-
-      setIsLoading(false);
-      setOpen(false); // Close dialog after successful update
-      onUpdate(); // Refresh the books list
     } catch (error) {
-      setIsLoading(false);
       console.error("Error updating book:", error);
+      // You might want to show an error message to the user here
+    } finally {
+      setIsLoading(false);
     }
   };
 

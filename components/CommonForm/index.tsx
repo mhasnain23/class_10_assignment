@@ -100,10 +100,10 @@ const BookForm = () => {
   };
 
   return (
-    <div className="mt-[3rem] w-full">
+    <div className="mt-[3rem] w-full translate-y-10">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center gap-10 max-w-2xl mx-auto bg-white/20 backdrop-blur-[15px] rounded-lg px-7 py-10"
+        className="flex flex-col items-center gap-10 max-w-2xl mx-auto bg-gray-100 rounded-lg px-7 py-10"
       >
         {/* Image Preview */}
         <div className="w-full flex flex-col items-center gap-4">

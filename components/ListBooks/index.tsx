@@ -1,6 +1,6 @@
 "use client";
 
-import EditBooks from "@/components/EditBooks";
+// import EditBooks from "@/components/EditBooks";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -43,7 +43,7 @@ const ListBooks = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log("Failed to fetch books");
+      console.log("Failed to fetch books", error);
     }
   };
 
