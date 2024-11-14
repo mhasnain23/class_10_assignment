@@ -7,12 +7,12 @@ export const navMenu = [
         path: "/",
     },
     {
-        text: "About",
-        path: "/",
+        text: "Books",
+        path: "/books",
     },
     {
-        text: "Contact",
-        path: "/",
+        text: "About",
+        path: "#",
     },
 ]
 

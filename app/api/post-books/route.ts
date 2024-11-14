@@ -1,44 +1,41 @@
-import connectToDB from "@/database";
+import connectToDB from "@/lib/db";
 import Books from "@/models/books";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
-// function saveToLocalStorage(data: any) {
-//     if (typeof window !== "undefined") {
-//         localStorage.setItem("data", JSON.stringify(data));
-//     } else {
-//         console.error("localStorage is not available.");
-//     }
-// }
-
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: Request) {
     try {
         await connectToDB();
+        const body = await req.json();
+        const { name, author, title, isAvailable, image } = body;
 
-        const { name, author, title } = await req.body
-
-        console.log(name, author, title);
-
-
-        // Check if all fields are filled
-        if (!name || !author || !title) {
-            return res.status(400).json({
-                message: "All fields are required!",
+        // Validate data before DB operation
+        if (!name?.trim() || !author?.trim() || !title?.trim()) {
+            return NextResponse.json({
+                message: "Required fields are missing!",
                 success: false
-            });
+            }, { status: 400 });
         }
 
-        const result = await Books.create({ name, title, author })
+        // Use create with lean for better performance
+        const result = await Books.create({
+            name,
+            title,
+            author,
+            isAvailable: isAvailable ?? true,
+            image: image || ""
+        });
 
-        if (result) {
-            return res.status(200).json({
-                message: "Data saved successfully!",
-                success: true,
-            });
-        } else {
-            return res.status(500).json({ message: "something went wrong!" })
-        }
+        return NextResponse.json({
+            message: "Data saved successfully!",
+            success: true,
+            data: result
+        }, { status: 201 }); // Use 201 for resource creation
 
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error", success: false });
+        console.error("POST Error:", error);
+        return NextResponse.json({
+            message: error instanceof Error ? error.message : "Internal server error",
+            success: false
+        }, { status: 500 });
     }
 }
